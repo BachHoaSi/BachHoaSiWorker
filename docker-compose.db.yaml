@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  postgresql-bachhoasi:
+    container_name: postgresql-bachhoasi-database
+    image: postgres:13.14-bullseye
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    networks:
+      - bachhoasi-networks
+
+  pg-admin-rode:
+    container_name: postgres-admin-local
+    image: elestio/pgadmin:REL-8_6
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGA_PASSWORD}
+      PGADMIN_LISTEN_PORT: ${PGA_PORT}
+    networks:
+      - bachhoasi-networks
+    ports:
+      - ${PGA_PORT}:${PGA_PORT}
+
+networks:
+  bachhoasi-networks:

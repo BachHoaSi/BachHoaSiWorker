@@ -37,12 +37,8 @@ jobs:
       DB_USERNAME: ${{secrets.DB_USERNAME}}
       DB_PASSWORD: ${{secrets.DB_PASSWORD}}
       DB_NAME: ${{secrets.DB_NAME}}
-
-      ACCESS_TOKEN_KEY: ${{secrets.ACCESS_TOKEN_KEY}}
-      ACCESS_TOKEN_EXT: ${{secrets.ACCESS_TOKEN_EXT}}
-      REFRESH_TOKEN_KEY: ${{secrets.REFRESH_TOKEN_KEY}}
-      REFRESH_TOKEN_EXT: ${{secrets.REFRESH_TOKEN_EXT}}
-
+      
+      BUCKET: ${{secrets.BUCKET}}
       GG_LOCAL_CREDENTIAL_PATH: ${{secrets.GG_CREDENTIAL_PATH}}
       GG_CREDENTIAL_NAME: ${{secrets.GG_CREDENTIAL_NAME}}
 

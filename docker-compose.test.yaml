@@ -21,6 +21,6 @@ services:
 
 networks:
   bachhoasi-networks:
-    name: bachhoasi-networks
+    name: bach-hoa-si-api-test_bachhoasi-networks
     external: true
 

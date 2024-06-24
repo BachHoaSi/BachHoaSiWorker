@@ -39,6 +39,5 @@ public class AdminWorkerCronJob {
         shipperUpdateQuery.where(cb.or(predicates.toArray(new Predicate[0])));
 
         int updateCount = em.createQuery(shipperUpdateQuery).executeUpdate();
-        System.out.println(String.format("Updated %d Shippers", updateCount));
     }
 }

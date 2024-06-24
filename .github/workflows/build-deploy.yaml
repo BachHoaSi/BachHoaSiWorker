@@ -1,0 +1,69 @@
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  bach-hoa-si-worker-build:
+    name: Build source code to Docker image
+    runs-on: ubuntu-22.04 
+    steps:
+      - name: Checkout Develop
+        uses: actions/checkout@v3
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Build API image
+        run: docker build -t ${{ secrets.REGISTRY_NAME }}/bach-hoa-si-worker:latest .
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push ${{ secrets.REGISTRY_NAME }}/bach-hoa-si-worker:latest
+
+      - name: Run registry garbage collection
+        run: doctl registry garbage-collection start --include-untagged-manifests --force
+  
+  staging-api-deploy:
+    name: Deploy Staging API Manager To Google Service Server For Testing
+    runs-on: deploy
+    needs: bach-hoa-si-worker-build
+    env:
+      DB_PORT: ${{secrets.DB_PORT}}
+      DB_USERNAME: ${{secrets.DB_USERNAME}}
+      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+      DB_NAME: ${{secrets.DB_NAME}}
+
+      ACCESS_TOKEN_KEY: ${{secrets.ACCESS_TOKEN_KEY}}
+      ACCESS_TOKEN_EXT: ${{secrets.ACCESS_TOKEN_EXT}}
+      REFRESH_TOKEN_KEY: ${{secrets.REFRESH_TOKEN_KEY}}
+      REFRESH_TOKEN_EXT: ${{secrets.REFRESH_TOKEN_EXT}}
+
+      GG_LOCAL_CREDENTIAL_PATH: ${{secrets.GG_CREDENTIAL_PATH}}
+      GG_CREDENTIAL_NAME: ${{secrets.GG_CREDENTIAL_NAME}}
+
+      DOCKER_USERNAME: ${{ secrets.REGISTRY_NAME }}
+    steps:
+    - name: Checkout Develop
+      uses: actions/checkout@v3
+
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+    - name: Stop BachHoaSi Worker
+      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-worker-test down bachhoasi-worker
+
+    - name: Clean Old BachHoaSi Worker Image
+      run: docker rmi ${{ secrets.REGISTRY_NAME }}/bach-hoa-si-worker:latest 
+      continue-on-error: true
+
+    - name: Log in to DigitalOcean Container Registry with short-lived credentials
+      run: doctl registry login --expiry-seconds 1200
+
+    - name: Deploy worker
+      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-worker-test up -d bachhoasi-worker

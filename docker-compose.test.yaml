@@ -1,11 +1,9 @@
 version: '3.8'
 
 services:
-  bachhoasi-api:
-    container_name: bachhoasi-api-management
-    image: ${DOCKER_USERNAME}/bach-hoa-si-api:latest
-    ports:
-      - ${PORT}:${PORT}
+  bachhoasi-worker:
+    container_name: bachhoasi-worker-management
+    image: ${DOCKER_USERNAME}/bach-hoa-si-worker:latest
     restart: always
     environment:
       DB_URL: postgresql-bachhoasi

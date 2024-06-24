@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ImageFirebaseCleanCronJob {
-    @Scheduled(cron = "* * 24 * * ?", zone = "Asia/Ho_Chi_Minh")
+    @Scheduled(cron = "* * 23 * * ?", zone = "Asia/Ho_Chi_Minh")
     public void removeUnusedImage() {
 
     }

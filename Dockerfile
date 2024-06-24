@@ -5,5 +5,5 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:17-jdk AS deploy
 WORKDIR /bachhoasi
-COPY --from=builder /bachhoasi/target/bachhoasi-0.0.1-SNAPSHOT.jar /bachhoasi/bachhoasi.jar
+COPY --from=builder /bachhoasi/target/bachhoasi_worker-0.0.1-SNAPSHOT /bachhoasi/bachhoasi.jar
 ENTRYPOINT ["java","-jar","bachhoasi.jar"]

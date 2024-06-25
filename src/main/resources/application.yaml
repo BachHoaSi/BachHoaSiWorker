@@ -33,3 +33,7 @@ google:
         config-name: ${GG_CREDENTIAL_NAME:bachhoasi.json}
     firebase:
         bucket: ${BUCKET}
+
+redis:
+    url: ${REDIS_URL}
+    port: ${REDIS_PORT}

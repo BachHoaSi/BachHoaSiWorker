@@ -1,6 +1,13 @@
 version: '3.8'
 
 services:
+
+  bachhoasi-cache:
+    container_name: bachhoasi-cache-redis
+    image: redis:alpine
+    networks:
+      - bachhoasi-networks
+      
   bachhoasi-worker:
     container_name: bachhoasi-worker-management
     image: ${DOCKER_USERNAME}/bach-hoa-si-worker:latest
@@ -14,6 +21,8 @@ services:
       BUCKET: ${BUCKET}
       GG_CREDENTIAL_PATH: /bachhoasi/key
       GG_CREDENTIAL_NAME: ${GG_CREDENTIAL_NAME}
+      REDIS_URL: bachhoasi-cache
+      REDIS_PORT: 6379
     volumes:
       - ${GG_LOCAL_CREDENTIAL_PATH}:/bachhoasi/key
     networks:

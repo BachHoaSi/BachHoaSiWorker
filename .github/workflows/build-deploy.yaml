@@ -63,4 +63,4 @@ jobs:
       run: doctl registry login --expiry-seconds 1200
 
     - name: Deploy worker
-      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-worker-test up -d bachhoasi-worker
+      run: docker compose -f docker-compose.test.yaml -p bach-hoa-si-worker-test up -d

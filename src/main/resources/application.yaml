@@ -29,7 +29,7 @@ spring:
         
 google:
     credentials:
-        path: ${GG_CREDENTIAL_PATH:}
+        json: ${GG_CREDENTIAL_JSON:}
         config-name: ${GG_CREDENTIAL_NAME:bachhoasi.json}
     firebase:
         bucket: ${BUCKET}

@@ -1,7 +1,5 @@
 version: '3.8'
-
 services:
-
   bachhoasi-cache:
     container_name: bachhoasi-cache-redis
     image: redis:alpine
@@ -19,17 +17,15 @@ services:
       DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
       BUCKET: ${BUCKET}
-      GG_CREDENTIAL_PATH: /bachhoasi/key
       GG_CREDENTIAL_NAME: ${GG_CREDENTIAL_NAME}
+      GG_CREDENTIAL_JSON: ${GG_CREDENTIAL_JSON}
       REDIS_URL: bachhoasi-cache
       REDIS_PORT: 6379
-    volumes:
-      - ${GG_LOCAL_CREDENTIAL_PATH}:/bachhoasi/key
     networks:
       - bachhoasi-networks
 
 networks:
   bachhoasi-networks:
-    name: bach-hoa-si-api-test_bachhoasi-networks
+    name: bachhoasi-networks
     external: true
 

@@ -5,12 +5,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
+import com.swd391.bachhoasi_worker.model.constant.Role;
 import com.swd391.bachhoasi_worker.model.constant.ShipperStatus;
+import com.swd391.bachhoasi_worker.model.entity.Admin;
+import com.swd391.bachhoasi_worker.model.entity.QAdmin;
 import com.swd391.bachhoasi_worker.model.entity.Shipper;
+import com.swd391.bachhoasi_worker.repository.AdminRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -23,6 +28,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminWorkerCronJob {
     private final EntityManager em;
+    private final AdminRepository adminRepository;
+    private final String botUsername;
+    private final String botPassword;
+
     @Scheduled(cron = "* 1 * * * *", zone = "Asia/Ho_Chi_Minh")
     public void changeReviewStatusForShipper() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -39,5 +48,17 @@ public class AdminWorkerCronJob {
         shipperUpdateQuery.where(cb.or(predicates.toArray(new Predicate[0])));
 
         int updateCount = em.createQuery(shipperUpdateQuery).executeUpdate();
+    }
+    @EventListener
+    public void updateBotUserAccount(ApplicationReadyEvent event) {
+        var currentAccount = adminRepository.findOne(QAdmin.admin.username.eq(botUsername)).orElse(Admin.builder()
+        .username(botUsername)
+        .hashPassword(botPassword)
+        .fullName("BOT")
+        .role(Role.ADMIN)
+        .isActive(false)
+        .isLocked(false)
+        .build());
+        adminRepository.save(currentAccount);
     }
 }

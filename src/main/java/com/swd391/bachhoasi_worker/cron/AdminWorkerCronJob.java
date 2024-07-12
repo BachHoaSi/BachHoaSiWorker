@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,7 +30,9 @@ import lombok.RequiredArgsConstructor;
 public class AdminWorkerCronJob {
     private final EntityManager em;
     private final AdminRepository adminRepository;
+    @Value("${bot.username}")
     private final String botUsername;
+    @Value("${bot.password}")
     private final String botPassword;
 
     @Scheduled(cron = "* 1 * * * *", zone = "Asia/Ho_Chi_Minh")

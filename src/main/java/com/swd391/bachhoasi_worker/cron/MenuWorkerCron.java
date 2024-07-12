@@ -39,7 +39,7 @@ public class MenuWorkerCron {
     private final JPAQueryFactory queryFactory;
 
     @Value("${bot.username}")
-    private final String botUsername;
+    private String botUsername;
 
     private final Logger logger = LoggerFactory.getLogger(MenuWorkerCron.class);
 

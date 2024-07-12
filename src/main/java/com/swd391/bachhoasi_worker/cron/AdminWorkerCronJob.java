@@ -31,9 +31,9 @@ public class AdminWorkerCronJob {
     private final EntityManager em;
     private final AdminRepository adminRepository;
     @Value("${bot.username}")
-    private final String botUsername;
+    private String botUsername;
     @Value("${bot.password}")
-    private final String botPassword;
+    private String botPassword;
 
     @Scheduled(cron = "* 1 * * * *", zone = "Asia/Ho_Chi_Minh")
     public void changeReviewStatusForShipper() {

@@ -34,6 +34,10 @@ google:
     firebase:
         bucket: ${BUCKET}
 
+bot:
+    username: ${BOT_USERNAME:bot}
+    password: ${BOT_PASS:bot12345}
+
 redis:
     url: ${REDIS_URL}
     port: ${REDIS_PORT}

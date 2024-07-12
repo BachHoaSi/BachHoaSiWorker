@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,10 @@ public class MenuWorkerCron {
     private final StoreLevelRepository storeLevelRepository;
     private final StoreTypeRepository storeTypeRepository;
     private final JPAQueryFactory queryFactory;
+
+    @Value("${bot.username}")
+    private final String botUsername;
+
     private final Logger logger = LoggerFactory.getLogger(MenuWorkerCron.class);
 
     @Scheduled(cron = "1 * * * * *")
@@ -53,7 +58,7 @@ public class MenuWorkerCron {
 
 
     public List<Menu> createMenuList (Collection<StoreLevel> storeLevels, Collection<StoreType> storeTypes) {
-        var bot = adminRepository.findOne(QAdmin.admin.username.eq("")).orElseThrow();
+        var bot = adminRepository.findOne(QAdmin.admin.username.eq(botUsername)).orElseThrow();
         var queryCheck = QMenu.menu.storeLevel.in(storeLevels).and(QMenu.menu.storeType.in(storeTypes));
         var menuFound = queryFactory.selectFrom(QMenu.menu).where(queryCheck).fetch();
         Map<AbstractMap.SimpleEntry<StoreLevel, StoreType>, Menu> existingMenusMap = menuFound.stream()

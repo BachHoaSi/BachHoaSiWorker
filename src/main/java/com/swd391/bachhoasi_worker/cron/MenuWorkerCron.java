@@ -36,7 +36,7 @@ public class MenuWorkerCron {
     private final AdminRepository adminRepository;
     private final StoreLevelRepository storeLevelRepository;
     private final StoreTypeRepository storeTypeRepository;
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     @Value("${bot.username}")
     private String botUsername;
@@ -60,7 +60,7 @@ public class MenuWorkerCron {
     public List<Menu> createMenuList (Collection<StoreLevel> storeLevels, Collection<StoreType> storeTypes) {
         var bot = adminRepository.findOne(QAdmin.admin.username.eq(botUsername)).orElseThrow();
         var queryCheck = QMenu.menu.storeLevel.in(storeLevels).and(QMenu.menu.storeType.in(storeTypes));
-        var menuFound = queryFactory.selectFrom(QMenu.menu).where(queryCheck).fetch();
+        var menuFound = jpaQueryFactory.selectFrom(QMenu.menu).where(queryCheck).fetch();
         Map<AbstractMap.SimpleEntry<StoreLevel, StoreType>, Menu> existingMenusMap = menuFound.stream()
             .collect(Collectors.toMap(menu -> new AbstractMap.SimpleEntry<>(menu.getStoreLevel(), menu.getStoreType()), Function.identity()));
         return storeLevels.stream()
